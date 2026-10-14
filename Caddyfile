@@ -1,0 +1,11 @@
+{$SEARXNG_HOSTNAME:localhost} {
+	# "internal" creates a local certificate for localhost.
+	# Set LETSENCRYPT_EMAIL in .env to get a free public certificate for a real domain.
+	tls {$LETSENCRYPT_EMAIL:internal}
+
+	encode zstd gzip
+
+	reverse_proxy searxng:8080 {
+		header_up X-Real-IP {remote_host}
+	}
+}
