@@ -2,12 +2,11 @@
 
 A self-hosted, privacy-respecting metasearch engine. SearXNG sends your query to many search engines (Google, Bing, DuckDuckGo, Wikipedia and more), removes the tracking, and returns the combined results. Your privacy is protected because the upstream engines see a random profile and your server's IP address, not your home network or your search history.
 
-This project runs SearXNG with Docker Compose, puts it behind Caddy for HTTPS, and uses Redis for caching.
+This project runs SearXNG with Docker Compose and uses Redis for caching. A Caddy reverse proxy is included for HTTPS, but see **Known Issues** below.
 
 ## Features
 
-- Metasearch across 70+ engines (enable or disable them in `searxng/settings.yml`)
-- Automatic HTTPS with Let's Encrypt for a real domain, or a local certificate for localhost
+- Metasearch across many engines (enable or disable them in `searxng/settings.yml`)
 - Strict safe search option (useful for kids)
 - DuckDuckGo autocomplete
 - GET-based requests so the browser Back button works
@@ -24,7 +23,7 @@ This project runs SearXNG with Docker Compose, puts it behind Caddy for HTTPS, a
 
 ## Requirements
 
-- A Linux server or computer (Ubuntu 20.04 or 22.04 is tested). You can also run it on a Raspberry Pi, a home lab VM, or Windows/macOS with Docker Desktop.
+- A Linux server or computer (the install script targets Ubuntu). Windows or macOS with Docker Desktop also works for local testing.
 - Docker and Docker Compose
 - Git
 - Optional: a domain name pointing (A record) at your server's public IP, for HTTPS on the public internet
@@ -75,16 +74,31 @@ This project runs SearXNG with Docker Compose, puts it behind Caddy for HTTPS, a
 
 6. **Open your search engine**
 
-   Visit `https://<your-hostname>` in a browser. For `localhost`, accept the local certificate warning.
+   Visit `http://<your-server-ip>:8080` in a browser. Opening SearXNG over HTTPS through Caddy is a known issue (see above).
 
 ## Running Locally (Windows, macOS or home lab)
 
 1. Install Docker Desktop (Windows or macOS) or Docker on Linux.
-2. Copy `.env.example` to `.env`, or run `./scripts/generate-secret.sh` from Git Bash or WSL.
-3. Keep `SEARXNG_HOSTNAME=localhost`.
-4. Run `docker-compose up -d` and open `https://localhost`.
+2. Copy `.env.example` to `.env`, then add a secret key to `SEARXNG_SECRET` (for example, a 64-character random hex string).
+3. Run `docker-compose up -d`.
+4. To reach SearXNG directly, create a file named `docker-compose.override.yml` in the project folder with this content:
+
+   ```yaml
+   services:
+     searxng:
+       ports:
+         - "8080:8080"
+   ```
+
+5. Open `http://localhost:8080` and search.
+
+This override file is for local testing only. Don't commit it.
 
 A local instance is only available on your own network. To make it public, you need a domain and port forwarding on your router.
+
+## Known Issues
+
+- **HTTPS through Caddy is not working yet.** The `caddy` container restarts in a loop, so `https://localhost` does not load. SearXNG itself runs correctly, as shown in the local test above.
 
 ## Configuration
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Updates Ubuntu and installs Docker, Docker Compose and Git.
-# Tested on Ubuntu 20.04 and 22.04. Run with: sudo ./scripts/install-docker-ubuntu.sh
+# Written for Ubuntu. Run with: sudo ./scripts/install-docker-ubuntu.sh
 set -euo pipefail
 
 if [ "$(id -u)" -ne 0 ]; then
