@@ -42,7 +42,7 @@ This project runs SearXNG with Docker Compose, puts it behind Caddy for HTTPS, a
 2. **Clone the repository**
 
    ```bash
-   git clone https://github.com/<your-username>/searxng-private-search.git
+   git clone https://github.com/NandishYadav20/searxng-private-search.git
    cd searxng-private-search
    ```
 
